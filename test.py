@@ -6,6 +6,8 @@ from PIL import Image
 from HOG import *
 from SVM import *
 
+import matplotlib.pyplot as plt
+
 
 def resize_img(infile, outfile):
     im = Image.open(infile)
@@ -25,7 +27,6 @@ def img32To24():
 
 
 def plot_vector(dataSet, label, b, alphlas):
-    import matplotlib.pyplot as plt
     xcord1 = []
     ycord1 = []
     xcord2 = []
@@ -98,7 +99,7 @@ def do_training(pos_c=100,neg_c=300):  # 训练产生w b alpha
 
 
 # 给图片加框 https://www.jb51.net/article/155363.htm
-def test(test_path = '../images/test/girl.jpg'):
+def test(test_path = './images/test/girl.jpg'):
 
     #  ws(1,n),b(1,1),alpha(m,1)    请保证ws,alpha为np.matrix
     ws = []
@@ -111,7 +112,7 @@ def test(test_path = '../images/test/girl.jpg'):
 
     #  下面进行分类
 
-    test_img = cv2.imread(test_path)  # 彩色图
+    test_img = cv2.imread(test_path)  # 原始彩色图
     test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)    # 颜色问题，转换一下
     test_img_gray = cv2.imread(test_path, cv2.IMREAD_GRAYSCALE)  # 灰度图
 
@@ -139,5 +140,5 @@ def test(test_path = '../images/test/girl.jpg'):
     plt.show()
 
 if __name__ == '__main__':
-    # do_training()
+    do_training()
     test()
