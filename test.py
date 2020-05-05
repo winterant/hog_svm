@@ -18,14 +18,6 @@ def resize_img(infile, outfile):
     out.save(outfile)
 
 
-def img32To24():
-    i = 0
-    for name in os.listdir('../images/train/pos0'):
-        cc = Image.open('../images/train/pos0/' + name)
-        cc.convert('RGB').save('../images/train/pos1/person0' + str(i) + '.png')
-        i += 1
-
-
 def plot_vector(dataSet, label, b, alphlas):
     xcord1 = []
     ycord1 = []
@@ -50,22 +42,21 @@ def plot_vector(dataSet, label, b, alphlas):
 
 
 #  读取训练集,args样本个数
-def loadDataSet(pos_count,neg_count):
-    train_path = 'images/train'
+def loadDataSet(pos_path,pos_count,neg_path,neg_count):
     dataSet = []
     label = []
-    posImgs = os.listdir(train_path+'/pos')  # 正样本
-    negImgs = os.listdir(train_path+'/neg')
+    posImgs = os.listdir(pos_path)  # 正样本
+    negImgs = os.listdir(neg_path)
 
     for i in range(min(len(posImgs),pos_count)):  # 读取正样本
-        path = train_path+'/pos/' + posImgs[i]
+        path = pos_path+ '/' + posImgs[i]
         img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)  # 读取灰度图
         hog_vec, hog_img = Hog_descriptor(img).extract()  # 计算HOG特征描述子
         dataSet.append(hog_vec)
         label.append(1)
 
     for i in range(min(len(negImgs),neg_count)):  # 读取负样本
-        path = train_path+'/neg/' + negImgs[i]
+        path = neg_path+ '/' + negImgs[i]
         img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)  # 读取灰度图
         hog_vec, hog_img = Hog_descriptor(img).extract()  # 计算HOG特征描述子
         dataSet.append(hog_vec)
@@ -85,8 +76,8 @@ def plot_compare_2img(ori_img, hog_img):
     plt.show()
 
 
-def do_training(pos_c=100,neg_c=300):  # 训练产生w b alpha
-    dataSet, label = loadDataSet(pos_c,neg_c)  # HOG特征向量的训练集
+def do_training(pos_path,pos_c,neg_path,neg_c):  # 训练产生w b alpha
+    dataSet, label = loadDataSet(pos_path,pos_c,neg_path,neg_c)  # HOG特征向量的训练集
     ws, b, alpha = SMO(dataSetIn=dataSet, classLabels=label, C=0.6, toler=0.001, maxIter=60)  # SVM训练
     #  ws(1,n),b(1,1),alpha(m,1)    np.matrix
     fw = open('weights.txt', 'w')
@@ -99,7 +90,7 @@ def do_training(pos_c=100,neg_c=300):  # 训练产生w b alpha
 
 
 # 给图片加框 https://www.jb51.net/article/155363.htm
-def test(test_path = './images/test/girl.jpg'):
+def test(test_path):
 
     #  ws(1,n),b(1,1),alpha(m,1)    请保证ws,alpha为np.matrix
     ws = []
@@ -140,5 +131,5 @@ def test(test_path = './images/test/girl.jpg'):
     plt.show()
 
 if __name__ == '__main__':
-    do_training()
-    test()
+    do_training('images/train/pos',100,'images/train/neg',300)
+    test('images/test/girl.jpg')
