@@ -109,10 +109,10 @@ def test(test_path):
 
     height, width = test_img_gray.shape  # 高和宽
     slide_len=60     # 滑动步长
-    width_step=100   # 30   # 窗口宽度步长
+    width_step=100   # 窗口宽度步长
     win_sum=0; person = 0
-    for i in range(10,height,slide_len):
-        for j in range(10,width,slide_len):
+    for i in range(0,height,slide_len):
+        for j in range(0,width,slide_len):
             for wid in range(width_step,width,width_step):
                 hei = wid*2
                 if i+hei>=height or j+wid>=width: break
@@ -131,5 +131,5 @@ def test(test_path):
     plt.show()
 
 if __name__ == '__main__':
-    do_training('images/train/pos',100,'images/train/neg',300)
+    # do_training('images/train/pos',100,'images/train/neg',300)
     test('images/test/girl.jpg')

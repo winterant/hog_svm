@@ -210,7 +210,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):  # full Pl
 
 
 def calcWs(alphas, dataArr, classLabels):
-    X = np.mat(dataArr);
+    X = np.mat(dataArr)
     labelMat = np.mat(classLabels).transpose()
     m, n = np.shape(X)
     w = np.zeros((1, n))  # 横向
